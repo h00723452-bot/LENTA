@@ -20,29 +20,33 @@ export default function App() {
             const userData = userDoc.data();
             setUser({ id: firebaseUser.uid, ...userData } as User);
 
-            // Handle payment callback
+            // Handle payment callback (Обработка коллбэка после успешной покупки Premium)
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('payment_callback') === 'true' && urlParams.get('status') === 'success') {
               if (!userData.isPremium) {
                 try {
+                  // Выдаем пользователю премиум статус в базе данных
                   await updateDoc(doc(db, 'users', firebaseUser.uid), {
                     isPremium: true
                   });
+                  // Очищаем URL строку браузера от параметров
                   window.history.replaceState({}, document.title, window.location.pathname);
                 } catch (e) {
                   console.error("Error setting premium:", e);
                 }
               } else {
+                 // Если уже премиум, просто очищаем URL
                  window.history.replaceState({}, document.title, window.location.pathname);
               }
             }
 
-            // Handle tip callback
+            // Handle tip callback (Обработка коллбэка после отправки подарка/чаевых)
             if (urlParams.get('tip_callback') === 'true' && urlParams.get('status') === 'success') {
               const authorId = urlParams.get('authorId');
               const amount = Number(urlParams.get('amount'));
               if (authorId && amount && !isNaN(amount)) {
                 try {
+                  // Создаем новую транзакцию (поступление) для автора поста
                   await addDoc(collection(db, 'transactions'), {
                     userId: authorId,
                     type: 'tip_received',

@@ -3,12 +3,14 @@ import { getFirestore, initializeFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
-// Use import.meta.glob to optionally load the config file if it exists (avoids build errors on Vercel)
+// Динамически загружаем локальный конфиг Firebase
+// Это помогает избежать ошибок сборки на Vercel, если локальный файл конфига отсутствует
 const configFiles = import.meta.glob('../firebase-applet-config.json', { eager: true });
 const localConfig = configFiles['../firebase-applet-config.json'] 
   ? ((configFiles['../firebase-applet-config.json'] as any).default || configFiles['../firebase-applet-config.json'])
   : {};
 
+// Настраиваем Firebase. Берем ключи либо из локального файла, либо из переменных окружения Vercel (.env)
 const firebaseConfig = {
   apiKey: localConfig.apiKey || import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: localConfig.authDomain || import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -18,10 +20,15 @@ const firebaseConfig = {
   appId: localConfig.appId || import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+// Инициализируем само приложение
 const app = initializeApp(firebaseConfig);
+
+// Подключаем базу данных (Firestore). Используем кастомный ID базы для совместимости с AI Studio
 const db = initializeFirestore(app, {
-  localCache: undefined
+  localCache: undefined // Отключаем локальный кэш, так как он может вызывать конфликты
 }, localConfig.firestoreDatabaseId || import.meta.env.VITE_FIREBASE_DATABASE_ID);
+
+// Экспортируем сервисы авторизации и хранения
 const auth = getAuth(app);
 const storage = getStorage(app);
 
