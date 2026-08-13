@@ -9,7 +9,7 @@ import Comments from './Comments';
 import UserDisplay from './UserDisplay';
 import TipModal from './TipModal';
 
-export default function PostItem({ post, currentUser }: { post: Post, currentUser: User }) {
+export default function PostItem({ post, currentUser }: { post: Post, currentUser: User, key?: React.Key }) {
   const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
