@@ -1,0 +1,50 @@
+{
+  "collections": [
+    {
+      "name": "users",
+      "fields": [
+        { "name": "username", "type": "string" },
+        { "name": "createdAt", "type": "timestamp" }
+      ]
+    },
+    {
+      "name": "posts",
+      "fields": [
+        { "name": "authorId", "type": "string" },
+        { "name": "authorUsername", "type": "string" },
+        { "name": "content", "type": "string" },
+        { "name": "createdAt", "type": "timestamp" },
+        { "name": "likesCount", "type": "number" }
+      ]
+    },
+    {
+      "name": "postLikes",
+      "fields": [
+        { "name": "postId", "type": "string" },
+        { "name": "userId", "type": "string" },
+        { "name": "createdAt", "type": "timestamp" }
+      ]
+    },
+    {
+      "name": "comments",
+      "fields": [
+        { "name": "postId", "type": "string" },
+        { "name": "authorId", "type": "string" },
+        { "name": "authorUsername", "type": "string" },
+        { "name": "content", "type": "string" },
+        { "name": "createdAt", "type": "timestamp" }
+      ]
+    },
+    {
+      "name": "messages",
+      "fields": [
+        { "name": "participants", "type": "array" },
+        { "name": "senderId", "type": "string" },
+        { "name": "receiverId", "type": "string" },
+        { "name": "content", "type": "string" },
+        { "name": "createdAt", "type": "timestamp" },
+        { "name": "read", "type": "boolean" }
+      ]
+    }
+  ]
+}
